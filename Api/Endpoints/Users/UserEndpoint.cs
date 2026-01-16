@@ -1,5 +1,4 @@
 using Application.Services.User;
-using Domain.Entities.Users;
 using Shared.DTO.Users;
 
 namespace Api.Endpoints.Users
@@ -11,15 +10,9 @@ namespace Api.Endpoints.Users
             var userGroup = app.MapGroup("/api/users").WithTags("Users");
 
             // GET: /api/users
-            userGroup.MapGet("/", async (
-                IUserService userService,
-                int offset = 1,
-                int limit = 10,
-                string strQueryParam = "") =>
+            userGroup.MapGet("/", async (IUserService userService, int offset = 1, int limit = 10, string strQueryParam = "") =>
             {
-                var result = await userService
-                    .GetAllItems(offset, limit, strQueryParam);
-
+                var result = await userService.GetAllItems(offset, limit, strQueryParam);
                 return Results.Ok(result);
             });
 
@@ -41,20 +34,14 @@ namespace Api.Endpoints.Users
             userGroup.MapPut("/{id:guid}", async (Guid id, UserUpdateRequest request, IUserService service) =>
             {
                 var updated = await service.UpdateAsync(id, request);
-                return updated ? Results.NoContent() : Results.NotFound();
+                return Results.Ok(updated);
             });
 
             // DELETE: /api/users/{id}
-            userGroup.MapDelete("/{id:guid}", async (
-                IUserService userService,
-                Guid id) =>
+            userGroup.MapDelete("/{id:guid}", async (IUserService userService, Guid id) =>
             {
-                var deleted = await userService
-                    .DeleteAsync(id);
-
-                return deleted
-                    ? Results.NoContent()
-                    : Results.NotFound();
+                var deleted = await userService.DeleteAsync(id);
+                return Results.Ok(deleted);
             });
         }
     }

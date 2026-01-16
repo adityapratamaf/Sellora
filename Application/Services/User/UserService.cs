@@ -11,7 +11,6 @@ namespace Application.Services.User
     {
         Task<PaginatedResponse<UserResponseRequest>> GetAllItems(int offset, int limit, string strQueryParam);
         Task<PaginatedResponse<UserResponseRequest>> GetItemDetailById(Guid id);
-
         Task<UserResponseRequest> CreateAsync(UserCreateRequest request);
         Task<bool> UpdateAsync(Guid id, UserUpdateRequest request);
         Task<bool> DeleteAsync(Guid id);
@@ -37,7 +36,6 @@ namespace Application.Services.User
             if (!string.IsNullOrWhiteSpace(strQueryParam))
             {
                 var searchPattern = $"%{strQueryParam}%".ToLower();
-
                 entityQuery = entityQuery.Where(x =>
                     EF.Functions.Like(x.Name.ToLower(), searchPattern) ||
                     EF.Functions.Like(x.Username.ToLower(), searchPattern) ||
@@ -81,7 +79,7 @@ namespace Application.Services.User
                 .Take(1)
                 .ToListAsync();
 
-            _log.LogInformation("Get User Detail ID: {Id}", id);
+            _log.LogInformation("Get User Detail ID : {Id}", id);
 
             return new PaginatedResponse<UserResponseRequest>(
                 pagedData, 
@@ -105,13 +103,12 @@ namespace Application.Services.User
                 Phone = request.Phone,
                 Role = request.Role,
                 IsActive = request.IsActive,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow
             };
 
             var created = await _userRepository.CreateAsync(entity);
 
-            _log.LogInformation("User created: {Id}", created.Id);
+            _log.LogInformation("User Created : {Id}", created.Id);
 
             return _mapper.Map<UserResponseRequest>(created);
         }
@@ -136,7 +133,7 @@ namespace Application.Services.User
                 existing.Password = BCrypt.Net.BCrypt.HashPassword(request.Password);
             }
 
-            _log.LogInformation("User updated: {Id}", id);
+            _log.LogInformation("User Updated : {Id}", id);
 
             return await _userRepository.UpdateAsync(existing);
         }
@@ -145,7 +142,7 @@ namespace Application.Services.User
         {
             var result = await _userRepository.DeleteAsync(id);  
             
-            _log.LogInformation("User deleted: {Id}", id);
+            _log.LogInformation("User Deleted : {Id}", id);
 
             return result;
         }
