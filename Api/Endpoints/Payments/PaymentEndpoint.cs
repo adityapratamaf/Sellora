@@ -1,5 +1,4 @@
 using Application.Services.Payments;
-using Domain.Entities.Payments;
 using Shared.DTO.Payments;
 
 namespace Api.Endpoints.Payments
@@ -8,20 +7,12 @@ namespace Api.Endpoints.Payments
     {
         public static void MapPaymentEndpoints(this WebApplication app)
         {
-            var paymentGroup = app
-                .MapGroup("/api/payments")
-                .WithTags("Payments");
+            var paymentGroup = app.MapGroup("/api/payments").WithTags("Payments");
 
             // GET: /api/payments
-            paymentGroup.MapGet("/", async (
-                IPaymentService paymentService,
-                int offset = 1,
-                int limit = 10,
-                string strQueryParam = "") =>
+            paymentGroup.MapGet("/", async (IPaymentService paymentService, int offset = 1, int limit = 10, string strQueryParam = "") =>
             {
-                var result = await paymentService
-                    .GetAllItems(offset, limit, strQueryParam);
-
+                var result = await paymentService.GetAllItems(offset, limit, strQueryParam);
                 return Results.Ok(result);
             });
 
@@ -43,20 +34,14 @@ namespace Api.Endpoints.Payments
             paymentGroup.MapPut("/{id:guid}", async (Guid id, PaymentUpdateRequest request, IPaymentService service) =>
             {
                 var updated = await service.UpdateAsync(id, request);
-                return updated ? Results.NoContent() : Results.NotFound();
+                return Results.Ok(updated);
             });
 
             // DELETE: /api/payments/{id}
-            paymentGroup.MapDelete("/{id:guid}", async (
-                IPaymentService paymentService,
-                Guid id) =>
+            paymentGroup.MapDelete("/{id:guid}", async (IPaymentService paymentService, Guid id) =>
             {
-                var deleted = await paymentService
-                    .DeleteAsync(id);
-
-                return deleted
-                    ? Results.NoContent()
-                    : Results.NotFound();
+                var deleted = await paymentService.DeleteAsync(id);
+                return Results.Ok(deleted);
             });
         }
     }
