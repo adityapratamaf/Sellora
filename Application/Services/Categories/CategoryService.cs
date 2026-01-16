@@ -75,7 +75,7 @@ namespace Application.Services.Categories
                 .ToListAsync();
 
             _log.LogInformation(
-                "Retrieved {Count} categories (Page {Page})",
+                "Retrieved {Count} Categories (Page {Page})",
                 pagedData.Count,
                 pageNumber);
 

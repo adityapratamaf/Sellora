@@ -1,58 +1,61 @@
 using Application.Services.User;
-using Microsoft.AspNetCore.Mvc;
+using Domain.Entities.Users;
 using Shared.DTO.Users;
 
-namespace Api.Endpoints;
-
-public static class UserEndpoint
+namespace Api.Endpoints.Users
 {
-    public static WebApplication MapUserEndpoints(this WebApplication app)
+    public static class UserEndpoint
     {
-        var group = app.MapGroup("/api/users").WithTags("Users");
-
-        group.MapGet("/", async (
-            [FromServices] IUserService service,
-            [FromQuery] int offset = 1,
-            [FromQuery] int limit = 10,
-            [FromQuery] string? q = null) =>
+        public static void MapUserEndpoints(this WebApplication app)
         {
-            var result = await service.GetAllItems(offset, limit, q ?? "");
-            return Results.Ok(result);
-        });
+            var userGroup = app.MapGroup("/api/users").WithTags("Users");
 
-        group.MapGet("/{id:guid}", async (
-            Guid id,
-            [FromServices] IUserService service) =>
-        {
-            var result = await service.GetItemDetailById(id);
-            return Results.Ok(result);
-        });
+            // GET: /api/users
+            userGroup.MapGet("/", async (
+                IUserService userService,
+                int offset = 1,
+                int limit = 10,
+                string strQueryParam = "") =>
+            {
+                var result = await userService
+                    .GetAllItems(offset, limit, strQueryParam);
 
-        group.MapPost("/", async (
-            [FromBody] UserCreateRequest request,
-            [FromServices] IUserService service) =>
-        {
-            var result = await service.CreateAsync(request);
-            return Results.Created($"/api/users/{result.Id}", result);
-        });
+                return Results.Ok(result);
+            });
 
-        group.MapPut("/{id:guid}", async (
-            Guid id,
-            [FromBody] UserUpdateRequest request,
-            [FromServices] IUserService service) =>
-        {
-            var updated = await service.UpdateAsync(id, request);
-            return updated ? Results.NoContent() : Results.NotFound();
-        });
+            // GET: /api/users/{id}
+            userGroup.MapGet("/{strUUID}", async (IUserService userService, Guid id) =>
+            {
+                var result = await userService.GetItemDetailById(id);
+                return Results.Ok(result);
+            });
 
-        group.MapDelete("/{id:guid}", async (
-            Guid id,
-            [FromServices] IUserService service) =>
-        {
-            var deleted = await service.DeleteAsync(id);
-            return deleted ? Results.NoContent() : Results.NotFound();
-        });
+            // POST: /api/users
+            userGroup.MapPost("/", async (UserCreateRequest request, IUserService service) =>
+            {
+                var result = await service.CreateAsync(request);
+                return Results.Created($"/api/users/{result.Id}", result);
+            });
 
-        return app;
+            // PUT: /api/users/{id}
+            userGroup.MapPut("/{id:guid}", async (Guid id, UserUpdateRequest request, IUserService service) =>
+            {
+                var updated = await service.UpdateAsync(id, request);
+                return updated ? Results.NoContent() : Results.NotFound();
+            });
+
+            // DELETE: /api/users/{id}
+            userGroup.MapDelete("/{id:guid}", async (
+                IUserService userService,
+                Guid id) =>
+            {
+                var deleted = await userService
+                    .DeleteAsync(id);
+
+                return deleted
+                    ? Results.NoContent()
+                    : Results.NotFound();
+            });
+        }
     }
 }

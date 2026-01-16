@@ -9,3 +9,4 @@
 /Users/macbook/Desktop/Project/Sellora/Shared/obj/Debug/net9.0/refint/Shared.dll
 /Users/macbook/Desktop/Project/Sellora/Shared/obj/Debug/net9.0/Shared.pdb
 /Users/macbook/Desktop/Project/Sellora/Shared/obj/Debug/net9.0/ref/Shared.dll
+/Users/macbook/Desktop/Project/Sellora/Shared/obj/Debug/net9.0/Shared.sourcelink.json
