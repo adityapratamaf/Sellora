@@ -10,10 +10,7 @@ namespace Application.Services.Products
 {
     public interface IProductService
     {
-        Task<PaginatedResponse<ProductResponse>> GetAllItems(
-            int offset,
-            int limit,
-            string strQueryParam);
+        Task<PaginatedResponse<ProductResponse>> GetAllItems(int offset, int limit, string strQueryParam);
         Task<PaginatedResponse<ProductResponse>> GetItemDetailById(Guid id);
         Task<ProductResponse> CreateAsync(ProductCreateRequest request);
         Task<bool> UpdateAsync(Guid id, ProductUpdateRequest request);
@@ -27,11 +24,7 @@ namespace Application.Services.Products
         private readonly ICategoryRepository _categoryRepository;
         private readonly ILogger<ProductService> _log;
         
-        public ProductService(
-            IProductRepository productRepository,
-            ICategoryRepository categoryRepository,
-            IMapper mapper,
-            ILogger<ProductService> logger)
+        public ProductService(IProductRepository productRepository, ICategoryRepository categoryRepository, IMapper mapper, ILogger<ProductService> logger)
         {
             _productRepository = productRepository;
             _categoryRepository = categoryRepository;
@@ -42,10 +35,7 @@ namespace Application.Services.Products
         /// <summary>
         /// Retrieves paginated product list with optional search by name.
         /// </summary>
-        public async Task<PaginatedResponse<ProductResponse>> GetAllItems(
-            int offset, 
-            int limit, 
-            string strQueryParam)
+        public async Task<PaginatedResponse<ProductResponse>> GetAllItems(int offset, int limit, string strQueryParam)
         {
             // 1. Ambil IQueryable<Entity>
             var entityQuery = _productRepository.GetAllAsQueryable();
@@ -77,7 +67,7 @@ namespace Application.Services.Products
                 .ToListAsync();
             
             _log.LogInformation(
-                "Retrieved {Count} product (Page {Page})",
+                "Retrieved {Count} Product (Page {Page})",
                 pagedData.Count,
                 pageNumber);
 
@@ -105,9 +95,13 @@ namespace Application.Services.Products
                 .Take(1)
                 .ToListAsync();
             
-            _log.LogInformation("Get Product Detail Id: {Id}", id);
+            _log.LogInformation("Get Product Detail Id : {Id}", id);
 
-            return new PaginatedResponse<ProductResponse>(pagedData, totalItems, 1, 1);
+            return new PaginatedResponse<ProductResponse>(
+                pagedData, 
+                totalItems, 
+                1, 
+                1);
         }
 
         public async Task<ProductResponse> CreateAsync(ProductCreateRequest request)
@@ -131,7 +125,7 @@ namespace Application.Services.Products
 
             var created = await _productRepository.CreateAsync(entity);
 
-            _log.LogInformation("Product created: {Id}", created.Id);
+            _log.LogInformation("Product Created : {Id}", created.Id);
 
             // Reload with category to ensure CategoryName mapping works
             var createdWithCategory = await _productRepository.GetByIdAsync(created.Id);
@@ -141,23 +135,37 @@ namespace Application.Services.Products
 
         public async Task<bool> UpdateAsync(Guid id, ProductUpdateRequest request)
         {
+            // Ambil data product yang sudah ada di database berdasarkan id
+            // Tujuannya untuk memastikan product-nya memang ada sebelum di-update
             var existing = await _productRepository.GetByIdAsync(id);
-            if (existing is null) return false;
+            if (existing is null) return false; // Kalau product tidak ditemukan, langsung return false (update gagal)
 
+            // Ambil category berdasarkan CategoryId yang dikirim dari request
+            // Tujuannya untuk validasi: jangan sampai product di-set ke category yang tidak ada
             var category = await _categoryRepository.GetByIdAsync(request.CategoryId);
             if (category is null)
-                throw new Exception("Category not found");
+                throw new Exception("Category Not Found"); // Kalau category tidak ditemukan, lempar exception, Ini beda dengan "return false": exception biasanya dianggap error/invalid request
 
-            existing.CategoryId = request.CategoryId;
-            existing.Name = request.Name;
-            existing.Description = request.Description;
-            existing.ImageProduct = request.ImageProduct;
-            existing.Price = request.Price;
-            existing.Stock = request.Stock;
-            existing.IsActive = request.IsActive;
-            existing.UpdatedAt = DateTime.UtcNow;
+             // Buat object entity Product baru yang isinya adalah data hasil update
+            var entity = new Domain.Entities.Products.Product
+            {
+                Id = id, // Set Id product yang akan di-update
+                CategoryId = request.CategoryId, // Update foreign key category
+                Name = request.Name, // Update field nama
+                Description = request.Description,
+                ImageProduct = request.ImageProduct,
+                Price = request.Price,
+                Stock = request.Stock,
+                IsActive = request.IsActive,
+                UpdatedAt = DateTime.UtcNow
+            };
 
-            return await _productRepository.UpdateAsync(existing);
+            // Panggil repository untuk melakukan update ke database
+            var result = await _productRepository.UpdateAsync(entity);
+            
+            _log.LogInformation("Product Updated : {Id}", id);
+
+            return result;
         }
 
         public async Task<bool> DeleteAsync(Guid id)
