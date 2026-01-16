@@ -1,5 +1,4 @@
 using Application.Services.Products;
-using Domain.Entities.Products;
 using Shared.DTO.Products;
 
 namespace Api.Endpoints.Products;
@@ -8,20 +7,12 @@ public static class ProductEndpoint
 {
     public static void MapProductEndpoints(this WebApplication app)
     {
-        var productGroup = app
-            .MapGroup("/api/products")
-            .WithTags("Products");
+        var productGroup = app.MapGroup("/api/products").WithTags("Products");
 
-        // GET: /api/payments
-        productGroup.MapGet("/", async (
-            IProductService productService,
-            int offset = 1,
-            int limit = 10,
-            string strQueryParam = "") =>
+        // GET: /api/products
+        productGroup.MapGet("/", async (IProductService productService, int offset = 1, int limit = 10, string strQueryParam = "") =>
         {
-            var result = await productService
-                .GetAllItems(offset, limit, strQueryParam);
-            
+            var result = await productService.GetAllItems(offset, limit, strQueryParam);
             return Results.Ok(result);
         });
 
@@ -43,20 +34,14 @@ public static class ProductEndpoint
         productGroup.MapPut("/{id:guid}", async (Guid id, ProductUpdateRequest request, IProductService service) =>
         {
             var updated = await service.UpdateAsync(id, request);
-            return updated ? Results.NoContent() : Results.NotFound();
+            return Results.Ok(updated);
         });
 
-        // DELETE: /api/payments/{id}
-        productGroup.MapDelete("/{id:guid}", async (
-            IProductService productService,
-            Guid id) =>
+        // DELETE: /api/products/{id}
+        productGroup.MapDelete("/{id:guid}", async (IProductService productService, Guid id) =>
         {
-            var deleted = await productService
-            .DeleteAsync(id);
-
-            return deleted
-                ? Results.NoContent()
-                : Results.NotFound();
+            var deleted = await productService.DeleteAsync(id);
+            return Results.Ok(deleted);
         });
     }
 }
