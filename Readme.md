@@ -1,8 +1,4 @@
-"# Development_Sellora"
-
----
-
-```md
+````md
 # Development_Sellora
 
 Sellora adalah aplikasi backend berbasis **ASP.NET Core** yang dirancang menggunakan **Clean Architecture** untuk mengelola domain e-commerce seperti Product, Category, dan fitur pendukung lainnya.
@@ -20,56 +16,53 @@ Project ini menggunakan **Clean Architecture** dengan pembagian layer sebagai be
 
 ```text
 Development_Sellora
-│
 ├── Domain
 │   ├── Entities
 │   └── Interfaces
-│
 ├── Application
 │   ├── DTOs
 │   ├── Services
-│   ├── Common
-│   │   └── Mappings (AutoMapper)
-│
+│   └── Common
+│       └── Mappings (AutoMapper)
 ├── Infrastructure
 │   ├── Data
 │   └── Repositories
-│
 └── Api
-└── Controllers
-
+    └── Controllers
 ````
 
-### Penjelasan singkat:
-- **Domain**  
+### Penjelasan singkat
+
+* **Domain**
   Berisi entity inti dan interface repository (tanpa dependency ke layer lain)
-- **Application**  
+* **Application**
   Berisi business logic, service, DTO, dan mapping
-- **Infrastructure**  
-  Implementasi repository, database (EF Core)
-- **Api**  
+* **Infrastructure**
+  Implementasi repository dan akses database menggunakan EF Core
+* **Api**
   Endpoint HTTP (REST API)
 
 ---
 
 ## 🚀 Tech Stack
 
-- **.NET 8 / ASP.NET Core**
-- **Entity Framework Core**
-- **AutoMapper**
-- **SQL Server / PostgreSQL** 
-- **Swagger / Scalar**
-- **Dependency Injection**
+* **.NET 8 / ASP.NET Core**
+* **Entity Framework Core**
+* **AutoMapper**
+* **SQL Server / PostgreSQL**
+* **Swagger / Scalar**
+* **Dependency Injection**
 
 ---
 
 ## ⚙️ Setup & Running Project
 
 ### 1️⃣ Clone repository
+
 ```bash
 git clone https://github.com/your-username/Development_Sellora.git
 cd Development_Sellora
-````
+```
 
 ### 2️⃣ Restore dependencies
 
@@ -81,15 +74,17 @@ dotnet restore
 
 Edit file:
 
-```bash
+```text
 Api/appsettings.json
 ```
 
 Contoh:
 
 ```json
-"ConnectionStrings": {
-  "DefaultConnection": "Server=localhost;Database=SelloraDb;Trusted_Connection=True;"
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=localhost;Database=SelloraDb;Trusted_Connection=True;"
+  }
 }
 ```
 
@@ -113,13 +108,13 @@ dotnet run --project Api
 
 Setelah aplikasi berjalan, buka:
 
-* **Swagger / Scalar**
+* **Swagger**
 
 ```
 http://localhost:{PORT}/swagger
 ```
 
-atau
+* **Scalar**
 
 ```
 http://localhost:{PORT}/scalar/v1
@@ -157,10 +152,10 @@ Response:
 
 ## 🛠️ Best Practices
 
-* Gunakan **migration incremental**, jangan edit DB manual
+* Gunakan **migration incremental**, jangan edit database secara manual
 * Gunakan `string?` untuk field opsional
 * Gunakan `string = null!` untuk field wajib
-* Jangan langsung `_context.Update(entity)` tanpa validasi
+* Hindari langsung `_context.Update(entity)` tanpa validasi
 
 ---
 
