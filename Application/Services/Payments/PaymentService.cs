@@ -1,5 +1,4 @@
 using AutoMapper;
-using Domain.Entities.Payments;
 using Domain.Interfaces.Payments;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -11,10 +10,7 @@ namespace Application.Services.Payments
     // INTERFACE DI FILE YANG SAMA
     public interface IPaymentService
     {
-        Task<PaginatedResponse<PaymentResponse>> GetAllItems(
-            int offset,
-            int limit,
-            string strQueryParam);
+        Task<PaginatedResponse<PaymentResponse>> GetAllItems(int offset, int limit, string strQueryParam);
         Task<PaginatedResponse<PaymentResponse>> GetItemDetailById(Guid id);
         Task<PaymentResponse> CreateAsync(PaymentCreateRequest request);
         Task<bool> UpdateAsync(Guid id, PaymentUpdateRequest request);
@@ -27,10 +23,7 @@ namespace Application.Services.Payments
         private readonly IMapper _mapper;
         private readonly ILogger<PaymentService> _log;
 
-        public PaymentService(
-            IPaymentRepository paymentRepository,
-            IMapper mapper,
-            ILogger<PaymentService> logger)
+        public PaymentService(IPaymentRepository paymentRepository, IMapper mapper, ILogger<PaymentService> logger)
         {
             _paymentRepository = paymentRepository;
             _mapper = mapper;
@@ -40,10 +33,7 @@ namespace Application.Services.Payments
         /// <summary>
         /// Retrieves paginated payment list with optional search by name.
         /// </summary>
-        public async Task<PaginatedResponse<PaymentResponse>> GetAllItems(
-            int offset,
-            int limit,
-            string strQueryParam)
+        public async Task<PaginatedResponse<PaymentResponse>> GetAllItems(int offset, int limit, string strQueryParam)
         {
             // 1. Ambil IQueryable<Entity>
             var entityQuery = _paymentRepository.GetAllAsQueryable();
@@ -75,7 +65,7 @@ namespace Application.Services.Payments
                 .ToListAsync();
 
             _log.LogInformation(
-                "Retrieved {Count} payment (Page {Page})",
+                "Retrieved {Count} Payment (Page {Page})",
                 pagedData.Count,
                 pageNumber);
 
@@ -122,12 +112,11 @@ namespace Application.Services.Payments
                 ImageLogo = request.ImageLogo,
                 IsActive = request.IsActive,
                 CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
             };
 
             var created = await _paymentRepository.CreateAsync(entity);
 
-            _log.LogInformation("Payment created: {Id}", created.Id);
+            _log.LogInformation("Payment Created: {Id}", created.Id);
 
             return _mapper.Map<PaymentResponse>(created);
         }
@@ -145,7 +134,7 @@ namespace Application.Services.Payments
 
             var result = await _paymentRepository.UpdateAsync(entity);
 
-            _log.LogInformation("Payment updated: {Id}", id);
+            _log.LogInformation("Payment Updated: {Id}", id);
 
             return result;
         }
@@ -154,11 +143,9 @@ namespace Application.Services.Payments
         {
             var result = await _paymentRepository.DeleteAsync(id);
 
-            _log.LogInformation("Payment deleted: {Id}", id);
+            _log.LogInformation("Payment Deleted: {Id}", id);
 
             return result;
         }
-
     }
-
 }
