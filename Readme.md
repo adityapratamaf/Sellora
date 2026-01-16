@@ -18,8 +18,7 @@ Project ini dikembangkan dengan fokus pada:
 
 Project ini menggunakan **Clean Architecture** dengan pembagian layer sebagai berikut:
 
-```
-
+```text
 Development_Sellora
 │
 ├── Domain
@@ -58,7 +57,7 @@ Development_Sellora
 - **.NET 8 / ASP.NET Core**
 - **Entity Framework Core**
 - **AutoMapper**
-- **SQL Server / PostgreSQL** (opsional)
+- **SQL Server / PostgreSQL** 
 - **Swagger / Scalar**
 - **Dependency Injection**
 
@@ -175,5 +174,3 @@ Backend Developer – Sellora
 ## 📄 License
 
 This project is licensed under the MIT License.
-
-```
