@@ -7,20 +7,12 @@ namespace Api.Endpoints.Categories
     {
         public static void MapCategoryEndpoints(this WebApplication app)
         {
-            var categoryGroup = app
-                .MapGroup("/api/categories")
-                .WithTags("Categories");
+            var categoryGroup = app.MapGroup("/api/categories").WithTags("Categories");
 
             // GET: /api/categories
-            categoryGroup.MapGet("/", async (
-                ICategoryService categoryService,
-                int offset = 1,
-                int limit = 10,
-                string strQueryParam = "") =>
+            categoryGroup.MapGet("/", async (ICategoryService categoryService, int offset = 1, int limit = 10, string strQueryParam = "") =>
             {
-                var result = await categoryService
-                    .GetAllItems(offset, limit, strQueryParam);
-
+                var result = await categoryService.GetAllItems(offset, limit, strQueryParam);
                 return Results.Ok(result);
             });
 
@@ -42,20 +34,14 @@ namespace Api.Endpoints.Categories
             categoryGroup.MapPut("/{id:guid}", async (Guid id, CategoryUpdateRequest request, ICategoryService service) =>
             {
                 var updated = await service.UpdateAsync(id, request);
-                return updated ? Results.NoContent() : Results.NotFound();
+                return Results.Ok(updated);
             });
 
             // DELETE: /api/categories/{id}
-            categoryGroup.MapDelete("/{id:guid}", async (
-                ICategoryService categoryService,
-                Guid id) =>
+            categoryGroup.MapDelete("/{id:guid}", async (ICategoryService categoryService, Guid id) =>
             {
-                var deleted = await categoryService
-                    .DeleteAsync(id);
-
-                return deleted
-                    ? Results.NoContent()
-                    : Results.NotFound();
+                var deleted = await categoryService.DeleteAsync(id);
+                return Results.Ok(deleted);
             });
         }
     }
