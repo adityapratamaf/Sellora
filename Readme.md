@@ -1,7 +1,9 @@
 ````md
 # Development_Sellora
 
-Sellora adalah aplikasi backend berbasis **ASP.NET Core** yang dirancang menggunakan **Clean Architecture** untuk mengelola domain e-commerce seperti Product, Category, dan fitur pendukung lainnya.
+Sellora adalah aplikasi backend berbasis **ASP.NET Core** yang dirancang 
+menggunakan **Clean Architecture** untuk mengelola domain e-commerce 
+seperti Product, Category, dan fitur pendukung lainnya.
 
 Project ini dikembangkan dengan fokus pada:
 - Struktur kode yang clean & scalable
