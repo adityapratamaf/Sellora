@@ -10,10 +10,7 @@ namespace Application.Services.Categories
     // INTERFACE DI FILE YANG SAMA
     public interface ICategoryService
     {
-        Task<PaginatedResponse<CategoryResponse>> GetAllItems(
-            int offset,
-            int limit,
-            string strQueryParam);
+        Task<PaginatedResponse<CategoryResponse>> GetAllItems(int offset, int limit, string strQueryParam);
         Task<PaginatedResponse<CategoryResponse>> GetItemDetailById(Guid id);
         Task<CategoryResponse> CreateAsync(CategoryCreateRequest request);
         Task<bool> UpdateAsync(Guid id, CategoryUpdateRequest request);
@@ -27,10 +24,7 @@ namespace Application.Services.Categories
         private readonly IMapper _mapper;
         private readonly ILogger<CategoryService> _log;
 
-        public CategoryService(
-            ICategoryRepository categoryRepository,
-            IMapper mapper,
-            ILogger<CategoryService> logger)
+        public CategoryService(ICategoryRepository categoryRepository, IMapper mapper, ILogger<CategoryService> logger)
         {
             _categoryRepository = categoryRepository;
             _mapper = mapper;
@@ -40,10 +34,7 @@ namespace Application.Services.Categories
         /// <summary>
         /// Retrieves paginated category list with optional search by name.
         /// </summary>
-        public async Task<PaginatedResponse<CategoryResponse>> GetAllItems(
-            int offset,
-            int limit,
-            string strQueryParam)
+        public async Task<PaginatedResponse<CategoryResponse>> GetAllItems( int offset, int limit, string strQueryParam)
         {
             // 1. Ambil IQueryable<Entity>
             var entityQuery = _categoryRepository.GetAllAsQueryable();
@@ -105,7 +96,7 @@ namespace Application.Services.Categories
                 .Take(1)
                 .ToListAsync();
 
-            _log.LogInformation("Get Category Detail ID: {Id}", id);
+            _log.LogInformation("Get Category Detail ID : {Id}", id);
 
             return new PaginatedResponse<CategoryResponse>(
                 pagedData,
@@ -122,12 +113,11 @@ namespace Application.Services.Categories
                 Description = request.Description,
                 IsActive = request.IsActive,
                 CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
             };
 
             var created = await _categoryRepository.CreateAsync(entity);
 
-            _log.LogInformation("Category created: {Id}", created.Id);
+            _log.LogInformation("Category Created : {Id}", created.Id);
 
             return _mapper.Map<CategoryResponse>(created);
         }
@@ -145,7 +135,7 @@ namespace Application.Services.Categories
 
             var result = await _categoryRepository.UpdateAsync(entity);
 
-            _log.LogInformation("Category updated: {Id}", id);
+            _log.LogInformation("Category Updated : {Id}", id);
 
             return result;
         }
@@ -154,7 +144,7 @@ namespace Application.Services.Categories
         {
             var result = await _categoryRepository.DeleteAsync(id);
 
-            _log.LogInformation("Category deleted: {Id}", id);
+            _log.LogInformation("Category Deleted : {Id}", id);
 
             return result;
         }
