@@ -1,7 +1,7 @@
 using AutoMapper;
-using BCrypt.Net;
 using Domain.Interfaces.Users;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Shared.Common.Querying;
 using Shared.DTO.Users;
 
@@ -21,11 +21,13 @@ namespace Application.Services.User
     {
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
+        private readonly ILogger<UserService> _log;
 
-        public UserService(IUserRepository userRepository, IMapper mapper)
+        public UserService(IUserRepository userRepository, IMapper mapper, ILogger<UserService> logger)
         {
             _userRepository = userRepository;
             _mapper = mapper;
+            _log = logger;
         }
 
         public async Task<PaginatedResponse<UserResponseRequest>> GetAllItems(int offset, int limit, string strQueryParam)
@@ -56,6 +58,11 @@ namespace Application.Services.User
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
+            
+            _log.LogInformation(
+                "Retrieved {Count} User (Page {Page})",
+                pagedData.Count,
+                pageNumber);
 
             return new PaginatedResponse<UserResponseRequest>(pagedData, totalItems, pageNumber, pageSize);
         }
@@ -74,7 +81,13 @@ namespace Application.Services.User
                 .Take(1)
                 .ToListAsync();
 
-            return new PaginatedResponse<UserResponseRequest>(pagedData, totalItems, 1, 1);
+            _log.LogInformation("Get User Detail ID: {Id}", id);
+
+            return new PaginatedResponse<UserResponseRequest>(
+                pagedData, 
+                totalItems, 
+                1, 
+                1);
         }
 
         public async Task<UserResponseRequest> CreateAsync(UserCreateRequest request)
@@ -97,6 +110,9 @@ namespace Application.Services.User
             };
 
             var created = await _userRepository.CreateAsync(entity);
+
+            _log.LogInformation("User created: {Id}", created.Id);
+
             return _mapper.Map<UserResponseRequest>(created);
         }
 
@@ -114,18 +130,24 @@ namespace Application.Services.User
             existing.IsActive = request.IsActive;
             existing.UpdatedAt = DateTime.UtcNow;
 
-            // ✅ ONLY HASH IF PASSWORD PROVIDED
+            // ONLY HASH IF PASSWORD PROVIDED
             if (!string.IsNullOrWhiteSpace(request.Password))
             {
                 existing.Password = BCrypt.Net.BCrypt.HashPassword(request.Password);
             }
+
+            _log.LogInformation("User updated: {Id}", id);
 
             return await _userRepository.UpdateAsync(existing);
         }
 
         public async Task<bool> DeleteAsync(Guid id)
         {
-            return await _userRepository.DeleteAsync(id);
+            var result = await _userRepository.DeleteAsync(id);  
+            
+            _log.LogInformation("User deleted: {Id}", id);
+
+            return result;
         }
     }
 }

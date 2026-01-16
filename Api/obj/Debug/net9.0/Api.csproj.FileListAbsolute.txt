@@ -132,3 +132,4 @@
 /Users/macbook/Desktop/Project/Sellora/Api/obj/Debug/net9.0/Api.genruntimeconfig.cache
 /Users/macbook/Desktop/Project/Sellora/Api/obj/Debug/net9.0/ref/Api.dll
 /Users/macbook/Desktop/Project/Sellora/Api/bin/Debug/net9.0/Scalar.AspNetCore.dll
+/Users/macbook/Desktop/Project/Sellora/Api/obj/Debug/net9.0/Api.sourcelink.json

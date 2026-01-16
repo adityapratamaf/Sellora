@@ -13,3 +13,4 @@
 /Users/macbook/Desktop/Project/Sellora/Infrastructure/obj/Debug/net9.0/refint/Infrastructure.dll
 /Users/macbook/Desktop/Project/Sellora/Infrastructure/obj/Debug/net9.0/Infrastructure.pdb
 /Users/macbook/Desktop/Project/Sellora/Infrastructure/obj/Debug/net9.0/ref/Infrastructure.dll
+/Users/macbook/Desktop/Project/Sellora/Infrastructure/obj/Debug/net9.0/Infrastructure.sourcelink.json
