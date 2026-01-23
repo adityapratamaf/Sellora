@@ -15,6 +15,7 @@ namespace Application.Services.Products
         Task<ProductResponse> CreateAsync(ProductCreateRequest request);
         Task<bool> UpdateAsync(Guid id, ProductUpdateRequest request);
         Task<bool> DeleteAsync(Guid id);
+        Task<PaginatedResponse<ProductResponse>> GetProductByCategory(Guid categoryId, int offset, int limit, string strQueryParam);
     }
 
     public class ProductService : IProductService
@@ -175,6 +176,55 @@ namespace Application.Services.Products
             _log.LogInformation("Product Delete : {Id}", id);
 
             return result;
+        }
+
+        public async Task<PaginatedResponse<ProductResponse>> GetProductByCategory(Guid categoryId, int offset, int limit, string strQueryParam)
+        {
+            // 1) Ambil IQueryable<Entity> dari repository berdasarkan category
+            var entityQuery = _productRepository.GetProductByCategory(categoryId);
+
+            // 2) Optional filtering (kalau ada query param)
+            if (!string.IsNullOrWhiteSpace(strQueryParam))
+            {
+                var searchPattern = $"%{strQueryParam}%".ToLower();
+                entityQuery = entityQuery.Where(x =>
+                    EF.Functions.Like(x.Name.ToLower(), searchPattern) ||
+                    EF.Functions.Like(x.Category.Name.ToLower(), searchPattern)
+                );
+            }
+
+            // 3) Urutkan
+            // entityQuery = entityQuery.OrderByDescending(x => x.CreatedAt);
+
+            // 4) Project Entity -> DTO (jadi IQueryable<ProductResponse>)
+            var dtoQuery = _mapper.ProjectTo<ProductResponse>(entityQuery);
+
+            // 5) Hitung total items (setelah filter)
+            int totalItems = await dtoQuery.CountAsync();
+
+            // 6) Pagination params
+            int pageNumber = offset > 0 ? offset : 1;
+            int pageSize = limit > 0 ? limit : 10;
+
+            // 7) Ambil data DTO yang sudah dipaging
+            var pagedData = await dtoQuery
+                .OrderBy(x => x.CreatedAt)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            _log.LogInformation(
+                "Retrieved {Count} Product by Category (Page {Page})",
+                pagedData.Count,
+                pageNumber);
+
+            // 8) Return sesuai tipe
+            return new PaginatedResponse<ProductResponse>(
+                pagedData, 
+                totalItems, 
+                pageNumber, 
+                pageSize
+            );
         }
     }
 }

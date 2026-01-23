@@ -10,7 +10,9 @@ public class ProductMappingProfile : Profile
     {
         CreateMap<ProductEntity, ProductResponse>()
             .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.Name));
+        
         CreateMap<ProductCreateRequest, ProductEntity>();
+        
         CreateMap<ProductUpdateRequest, ProductEntity>();
     }
 }

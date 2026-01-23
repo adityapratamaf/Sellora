@@ -43,5 +43,12 @@ public static class ProductEndpoint
             var deleted = await productService.DeleteAsync(id);
             return Results.Ok(deleted);
         });
+
+        // GET: /api/products/category
+        productGroup.MapGet("/category", async (IProductService productService, Guid id, int offset = 1, int limit = 10, string strQueryParam = "") =>
+        {
+            var result = await productService.GetProductByCategory(id, offset, limit, strQueryParam);
+            return Results.Ok(result);            
+        });
     }
 }
