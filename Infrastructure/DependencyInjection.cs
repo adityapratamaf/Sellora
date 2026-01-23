@@ -1,7 +1,7 @@
 using Domain.Interfaces.Users;
 using Domain.Interfaces.Products;
 using Infrastructure.Data.AppDbContext;
-using Infrastructure.Repositories.User;
+using Infrastructure.Repositories.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
