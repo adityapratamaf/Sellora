@@ -10,4 +10,7 @@ public interface IProductRepository
     Task<Product> CreateAsync(Product product);
     Task<bool> UpdateAsync(Product product);
     Task<bool> DeleteAsync(Guid id);
+
+    /// ambil product by category
+    IQueryable<Product> GetProductByCategory(Guid categoryId);
 }

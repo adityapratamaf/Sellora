@@ -75,5 +75,17 @@ namespace Infrastructure.Repositories.Products
             await _context.SaveChangesAsync();
             return true;
         }
+
+        /// <summary>
+        /// query products by category
+        /// </summary>
+        /// <param name="categoryId"></param>
+        /// <returns></returns>
+        public IQueryable<Product> GetProductByCategory(Guid categoryId)   // Method public yang mengembalikan IQueryable<Product>, menerima parameter categoryId (Guid)
+        {
+            return _context.Products                         // Ambil DbSet Products dari DbContext (_context) sebagai sumber query
+                .AsNoTracking()                              // Matikan change tracking: hasil query read-only, lebih ringan & cepat untuk kebutuhan baca
+                .Where(x => x.CategoryId == categoryId);     // Filter hanya produk yang CategoryId-nya sama dengan parameter categoryId
+        }
     }
 }
