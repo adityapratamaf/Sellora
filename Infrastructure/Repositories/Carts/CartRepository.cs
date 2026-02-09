@@ -20,6 +20,7 @@ public class CartRepository : ICartRepository
     {
         return await _context.Carts
             .Include(x => x.Items)
+            .ThenInclude(i => i.Product)
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.UserId == userId && x.IsActive);
     }
@@ -28,6 +29,7 @@ public class CartRepository : ICartRepository
     {
         return await _context.Carts
             .Include(x => x.Items)
+            .ThenInclude(i => i.Product)
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == id);
     }

@@ -1,4 +1,5 @@
 using System;
+using Domain.Entities.Products;
 
 namespace Domain.Entities.Carts;
 
@@ -9,10 +10,11 @@ public class CartItem
     public Guid CartId { get; set; }
     public Cart Cart { get; set; } = null!;
 
-    // Relasi ke Product (pakai Domain.Entities.Products.Product di project kamu)
+    // Relasi Ke Product
     public Guid ProductId { get; set; }
+    public Product Product { get; set; } = null!;
 
-    // Snapshot harga saat masuk cart (penting)
+    // Snapshot Harga Saat Masuk Cart 
     public decimal UnitPrice { get; set; }
 
     public int Quantity { get; set; }
