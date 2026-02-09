@@ -1,0 +1,76 @@
+############################
+# OS / Editor
+############################
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+
+############################
+# Visual Studio
+############################
+.vs/
+*.user
+*.userosscache
+*.suo
+*.userprefs
+*.rsuser
+*.sln.docstates
+*.VC.db
+*.VC.VC.opendb
+
+############################
+# Build outputs
+############################
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+*.log
+
+############################
+# .NET / NuGet
+############################
+.nuget/
+packages/
+*.nupkg
+*.snupkg
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+############################
+# Test results / coverage
+############################
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+coverage/
+coverage.cobertura.xml
+
+############################
+# Publish / build artifacts
+############################
+publish/
+*.publishsettings
+
+############################
+# Rider / ReSharper
+############################
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+############################
+# ASP.NET Scaffolding
+############################
+ScaffoldingReadMe.txt
+
+############################
+# Misc
+############################
+*.cache
+*.tmp
