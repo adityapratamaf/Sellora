@@ -10,6 +10,8 @@ using Infrastructure.Repositories.Products;
 using Infrastructure.Repositories.Categories;
 using Domain.Interfaces.Payments;
 using Infrastructure.Repositories.Payments;
+using Domain.Interfaces.Carts;
+using Infrastructure.Repositories.Carts;
 
 namespace Infrastructure;
 
@@ -24,6 +26,8 @@ public static class DependencyInjection
         services.AddScoped<ICategoryRepository, CategoryRepository>();
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<IPaymentRepository, PaymentRepository>();
+        services.AddScoped<ICartRepository, CartRepository>();
+        services.AddScoped<ICartItemRepository, CartItemRepository>();
 
         return services;
     }

@@ -2,6 +2,7 @@ using Api.Endpoints.Users;
 using Api.Endpoints.Categories;
 using Api.Endpoints.Products;
 using Api.Endpoints.Payments;
+using Api.Endpoints.Carts;
 
 namespace Api.EndpointMapper
 {
@@ -14,6 +15,7 @@ namespace Api.EndpointMapper
             app.MapCategoryEndpoints();
             app.MapProductEndpoints();
             app.MapPaymentEndpoints();
+            app.MapCartEndpoints();
 
             return app;
         }
