@@ -5,6 +5,7 @@ using Application.Services.User;
 using Application.Services.Categories;
 using Application.Services.Products;
 using Application.Services.Payments;
+using Application.Services.Carts;
 
 namespace Application;
 
@@ -20,6 +21,7 @@ public static class DependencyInjection
         services.AddScoped<ICategoryService, CategoryService>();
         services.AddScoped<IProductService, ProductService>();
         services.AddScoped<IPaymentService, PaymentService>();
+        services.AddScoped<ICartService, CartService>();
 
         return services;
     }

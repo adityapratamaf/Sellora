@@ -5,8 +5,8 @@
 /Users/macbook/Desktop/Project/Sellora/Shared/obj/Debug/net9.0/Shared.AssemblyInfoInputs.cache
 /Users/macbook/Desktop/Project/Sellora/Shared/obj/Debug/net9.0/Shared.AssemblyInfo.cs
 /Users/macbook/Desktop/Project/Sellora/Shared/obj/Debug/net9.0/Shared.csproj.CoreCompileInputs.cache
+/Users/macbook/Desktop/Project/Sellora/Shared/obj/Debug/net9.0/Shared.sourcelink.json
 /Users/macbook/Desktop/Project/Sellora/Shared/obj/Debug/net9.0/Shared.dll
 /Users/macbook/Desktop/Project/Sellora/Shared/obj/Debug/net9.0/refint/Shared.dll
 /Users/macbook/Desktop/Project/Sellora/Shared/obj/Debug/net9.0/Shared.pdb
 /Users/macbook/Desktop/Project/Sellora/Shared/obj/Debug/net9.0/ref/Shared.dll
-/Users/macbook/Desktop/Project/Sellora/Shared/obj/Debug/net9.0/Shared.sourcelink.json

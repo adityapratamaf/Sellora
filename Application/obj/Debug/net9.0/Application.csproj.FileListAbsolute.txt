@@ -1,8 +1,3 @@
-/Users/macbook/Desktop/Project/Sellora/Application/obj/Debug/net9.0/Application.csproj.AssemblyReference.cache
-/Users/macbook/Desktop/Project/Sellora/Application/obj/Debug/net9.0/Application.GeneratedMSBuildEditorConfig.editorconfig
-/Users/macbook/Desktop/Project/Sellora/Application/obj/Debug/net9.0/Application.AssemblyInfoInputs.cache
-/Users/macbook/Desktop/Project/Sellora/Application/obj/Debug/net9.0/Application.AssemblyInfo.cs
-/Users/macbook/Desktop/Project/Sellora/Application/obj/Debug/net9.0/Application.csproj.CoreCompileInputs.cache
 /Users/macbook/Desktop/Project/Sellora/Application/bin/Debug/net9.0/Application.deps.json
 /Users/macbook/Desktop/Project/Sellora/Application/bin/Debug/net9.0/Application.dll
 /Users/macbook/Desktop/Project/Sellora/Application/bin/Debug/net9.0/Application.pdb
@@ -10,9 +5,14 @@
 /Users/macbook/Desktop/Project/Sellora/Application/bin/Debug/net9.0/Shared.dll
 /Users/macbook/Desktop/Project/Sellora/Application/bin/Debug/net9.0/Domain.pdb
 /Users/macbook/Desktop/Project/Sellora/Application/bin/Debug/net9.0/Shared.pdb
+/Users/macbook/Desktop/Project/Sellora/Application/obj/Debug/net9.0/Application.csproj.AssemblyReference.cache
+/Users/macbook/Desktop/Project/Sellora/Application/obj/Debug/net9.0/Application.GeneratedMSBuildEditorConfig.editorconfig
+/Users/macbook/Desktop/Project/Sellora/Application/obj/Debug/net9.0/Application.AssemblyInfoInputs.cache
+/Users/macbook/Desktop/Project/Sellora/Application/obj/Debug/net9.0/Application.AssemblyInfo.cs
+/Users/macbook/Desktop/Project/Sellora/Application/obj/Debug/net9.0/Application.csproj.CoreCompileInputs.cache
+/Users/macbook/Desktop/Project/Sellora/Application/obj/Debug/net9.0/Application.sourcelink.json
 /Users/macbook/Desktop/Project/Sellora/Application/obj/Debug/net9.0/Applicat.44B5EDA2.Up2Date
 /Users/macbook/Desktop/Project/Sellora/Application/obj/Debug/net9.0/Application.dll
 /Users/macbook/Desktop/Project/Sellora/Application/obj/Debug/net9.0/refint/Application.dll
 /Users/macbook/Desktop/Project/Sellora/Application/obj/Debug/net9.0/Application.pdb
 /Users/macbook/Desktop/Project/Sellora/Application/obj/Debug/net9.0/ref/Application.dll
-/Users/macbook/Desktop/Project/Sellora/Application/obj/Debug/net9.0/Application.sourcelink.json

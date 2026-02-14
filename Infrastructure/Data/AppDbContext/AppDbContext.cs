@@ -3,6 +3,7 @@ using Domain.Entities.Users;
 using Domain.Entities.Products;
 using Microsoft.EntityFrameworkCore;
 using Domain.Entities.Payments;
+using Domain.Entities.Carts;
 
 namespace Infrastructure.Data.AppDbContext;
 
@@ -14,6 +15,8 @@ public class AppDbContext : DbContext
     public DbSet<Category> Categories => Set<Category>();
     public DbSet<Product> Products => Set<Product>();
     public DbSet<Payment> Payments => Set<Payment>();
+    public DbSet<Cart> Carts => Set<Cart>();
+    public DbSet<CartItem> CartItems => Set<CartItem>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -181,5 +184,30 @@ public class AppDbContext : DbContext
                 .IsRequired();
         }); 
     
+        // CART TABLE
+        modelBuilder.Entity<Cart>(entity =>
+        {
+            entity.ToTable("carts");
+            entity.HasKey(x => x.Id);
+
+            entity.HasMany(x => x.Items)
+                  .WithOne(x => x.Cart)
+                  .HasForeignKey(x => x.CartId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasIndex(x => new { x.UserId, x.IsActive });
+        });
+
+        // CART ITEM TABLE
+        modelBuilder.Entity<CartItem>(entity =>
+        {
+            entity.ToTable("cart_items");
+            entity.HasKey(x => x.Id);
+
+            entity.HasIndex(x => new { x.CartId, x.ProductId })
+                  .IsUnique(); // cegah duplikat item per product
+            entity.Property(x => x.UnitPrice)
+                  .HasColumnType("decimal(18,2)");
+        });
     }
 }
