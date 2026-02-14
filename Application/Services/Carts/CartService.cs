@@ -24,11 +24,7 @@ namespace Application.Services.Carts
         private readonly IProductRepository _productRepository;
         private readonly ILogger<CartService> _log;
 
-        public CartService(
-            ICartRepository cartRepository,
-            ICartItemRepository cartItemRepository,
-            IProductRepository productRepository,
-            ILogger<CartService> log)
+        public CartService(ICartRepository cartRepository, ICartItemRepository cartItemRepository, IProductRepository productRepository, ILogger<CartService> log)
         {
             _cartRepository = cartRepository;
             _cartItemRepository = cartItemRepository;
