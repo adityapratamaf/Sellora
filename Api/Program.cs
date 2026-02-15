@@ -52,6 +52,10 @@ using (var scope = app.Services.CreateScope())
 
 app.UseStaticFiles();
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
+if (!app.Environment.IsProduction())
+{
+    app.UseHttpsRedirection();
+}
 app.MapAllEndpoints();
 app.Run();
