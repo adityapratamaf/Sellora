@@ -47,4 +47,12 @@ public class CartRepository : ICartRepository
         await _context.SaveChangesAsync();
         return true;
     }
+
+    public async Task<Cart?> GetByIdWithItemsAsync(Guid cartId)
+    {
+        return await _context.Carts
+            .Include(c => c.Items)
+                .ThenInclude(i => i.Product)
+            .FirstOrDefaultAsync(c => c.Id == cartId);
+    }
 }

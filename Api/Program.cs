@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using AppDbContextType = Infrastructure.Data.AppDbContext.AppDbContext;
 using Infrastructure.Data.Seed;
 using Scalar.AspNetCore;
+using Domain.Entities.Orders;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -12,6 +12,8 @@ using Domain.Interfaces.Payments;
 using Infrastructure.Repositories.Payments;
 using Domain.Interfaces.Carts;
 using Infrastructure.Repositories.Carts;
+using Infrastructure.Repositories.Orders;
+using Domain.Interfaces.Orders;
 
 namespace Infrastructure;
 
@@ -28,6 +30,8 @@ public static class DependencyInjection
         services.AddScoped<IPaymentRepository, PaymentRepository>();
         services.AddScoped<ICartRepository, CartRepository>();
         services.AddScoped<ICartItemRepository, CartItemRepository>();
+        services.AddScoped<IOrderRepository, OrderRepository>();
+        services.AddScoped<IReservationRepository, ReservationRepository>();
 
         return services;
     }
