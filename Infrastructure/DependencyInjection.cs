@@ -32,6 +32,7 @@ public static class DependencyInjection
         services.AddScoped<ICartItemRepository, CartItemRepository>();
         services.AddScoped<IOrderRepository, OrderRepository>();
         services.AddScoped<IReservationRepository, ReservationRepository>();
+        services.AddHostedService<ExpiredReservationCleanupService>();
 
         return services;
     }
