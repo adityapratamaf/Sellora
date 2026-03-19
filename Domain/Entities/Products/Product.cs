@@ -1,7 +1,10 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 using Domain.Entities.Categories;
 
 namespace Domain.Entities.Products;
 
+[Table("products")]
 public class Product
 {
     public Guid Id { get; set; } 

@@ -51,6 +51,21 @@ using (var scope = app.Services.CreateScope())
     await PaymentSeeder.SeedAsync(db);
 }
 
+// using (var scope = app.Services.CreateScope())
+// {
+//     var db = scope.ServiceProvider.GetRequiredService<AppDbContextType>();
+
+//     await db.Database.MigrateAsync();
+
+//     if (!db.Users.Any())
+//     {
+//         await UserSeeder.SeedAsync(db);
+//         await CategorySeeder.SeedAsync(db);
+//         await ProductSeeder.SeedAsync(db);
+//         await PaymentSeeder.SeedAsync(db);
+//     }
+// }
+
 app.UseStaticFiles();
 
 app.UseHttpsRedirection();

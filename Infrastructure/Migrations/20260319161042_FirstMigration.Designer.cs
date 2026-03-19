@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260214164616_Second")]
-    partial class Second
+    [Migration("20260319161042_FirstMigration")]
+    partial class FirstMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -155,7 +155,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("orders", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Orders.OrderItem", b =>
@@ -187,7 +187,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("OrderItems");
+                    b.ToTable("order_items", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Orders.StockReservation", b =>
@@ -218,7 +218,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("ProductId", "ReservedUntil", "IsReleased");
 
-                    b.ToTable("StockReservations");
+                    b.ToTable("stock_reservations", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Payments.Payment", b =>

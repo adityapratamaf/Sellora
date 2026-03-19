@@ -152,7 +152,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("orders", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Orders.OrderItem", b =>
@@ -184,7 +184,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("OrderItems");
+                    b.ToTable("order_items", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Orders.StockReservation", b =>
@@ -215,7 +215,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("ProductId", "ReservedUntil", "IsReleased");
 
-                    b.ToTable("StockReservations");
+                    b.ToTable("stock_reservations", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Payments.Payment", b =>

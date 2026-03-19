@@ -91,9 +91,18 @@ namespace Infrastructure.Repositories.Products
         public async Task<Product?> GetByIdForUpdateAsync(Guid id)
         {
             // Postgres: SELECT ... FOR UPDATE untuk row lock
+            // return await _context.Products
+            //     .FromSqlInterpolated($@"SELECT * FROM ""products"" WHERE ""Id"" = {id} FOR UPDATE")
+            //     .FirstOrDefaultAsync();
+            
             return await _context.Products
-                .FromSqlInterpolated($@"SELECT * FROM ""Products"" WHERE ""Id"" = {id} FOR UPDATE")
-                .FirstOrDefaultAsync();
+            .FromSqlRaw(@"
+                SELECT * FROM products
+                WHERE ""Id"" = {0}
+                FOR UPDATE
+            ", id)
+            .AsTracking()
+            .FirstOrDefaultAsync();
         }
     }
 }

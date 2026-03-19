@@ -215,31 +215,33 @@ public class AppDbContext : DbContext
         });
 
         // ORDER 
-        modelBuilder.Entity<Order>(b =>
+        modelBuilder.Entity<Order>(entity =>
         {
-            b.HasKey(x => x.Id);
-            b.HasMany(x => x.Items)
+            entity.ToTable("orders");
+            entity.HasKey(x => x.Id);
+            entity.HasMany(x => x.Items)
             .WithOne(x => x.Order)
             .HasForeignKey(x => x.OrderId)
             .OnDelete(DeleteBehavior.Cascade);
 
-            b.HasIndex(x => x.UserId);
-            b.HasIndex(x => x.Status);
+            entity.HasIndex(x => x.UserId);
+            entity.HasIndex(x => x.Status);
         });
 
-        modelBuilder.Entity<OrderItem>(b =>
+        modelBuilder.Entity<OrderItem>(entity =>
         {
-            b.HasKey(x => x.Id);
-            b.Property(x => x.UnitPrice).HasColumnType("decimal(18,2)");
-            b.Property(x => x.LineTotal).HasColumnType("decimal(18,2)");
+            entity.ToTable("order_items");
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.UnitPrice).HasColumnType("decimal(18,2)");
+            entity.Property(x => x.LineTotal).HasColumnType("decimal(18,2)");
         });
 
-        modelBuilder.Entity<StockReservation>(b =>
+        modelBuilder.Entity<StockReservation>(entity =>
         {
-            b.HasKey(x => x.Id);
-            b.HasIndex(x => new { x.ProductId, x.ReservedUntil, x.IsReleased });
+            entity.ToTable("stock_reservations");
+            entity.HasKey(x => x.Id);
+            entity.HasIndex(x => new { x.ProductId, x.ReservedUntil, x.IsReleased });
         });
-
 
     }
 }

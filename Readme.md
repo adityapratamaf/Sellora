@@ -93,6 +93,12 @@ Contoh:
 ### 4️⃣ Jalankan migration
 
 ```bash
+dotnet ef migrations add FirstMigration \
+  --project Infrastructure/Infrastructure.csproj \
+  --startup-project Api/Api.csproj
+```
+
+```bash
 dotnet ef database update \
   --project Infrastructure/Infrastructure.csproj \
   --startup-project Api/Api.csproj
