@@ -4,6 +4,7 @@ using Domain.Entities.Products;
 using Microsoft.EntityFrameworkCore;
 using Domain.Entities.Payments;
 using Domain.Entities.Carts;
+using Domain.Entities.Orders;
 
 namespace Infrastructure.Data.AppDbContext;
 
@@ -17,6 +18,9 @@ public class AppDbContext : DbContext
     public DbSet<Payment> Payments => Set<Payment>();
     public DbSet<Cart> Carts => Set<Cart>();
     public DbSet<CartItem> CartItems => Set<CartItem>();
+    public DbSet<Order> Orders => Set<Order>();
+    public DbSet<OrderItem> OrderItems => Set<OrderItem>();
+    public DbSet<StockReservation> StockReservations => Set<StockReservation>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -209,5 +213,35 @@ public class AppDbContext : DbContext
             entity.Property(x => x.UnitPrice)
                   .HasColumnType("decimal(18,2)");
         });
+
+        // ORDER 
+        modelBuilder.Entity<Order>(entity =>
+        {
+            entity.ToTable("orders");
+            entity.HasKey(x => x.Id);
+            entity.HasMany(x => x.Items)
+            .WithOne(x => x.Order)
+            .HasForeignKey(x => x.OrderId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasIndex(x => x.UserId);
+            entity.HasIndex(x => x.Status);
+        });
+
+        modelBuilder.Entity<OrderItem>(entity =>
+        {
+            entity.ToTable("order_items");
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.UnitPrice).HasColumnType("decimal(18,2)");
+            entity.Property(x => x.LineTotal).HasColumnType("decimal(18,2)");
+        });
+
+        modelBuilder.Entity<StockReservation>(entity =>
+        {
+            entity.ToTable("stock_reservations");
+            entity.HasKey(x => x.Id);
+            entity.HasIndex(x => new { x.ProductId, x.ReservedUntil, x.IsReleased });
+        });
+
     }
 }

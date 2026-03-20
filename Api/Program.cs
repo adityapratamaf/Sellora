@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using AppDbContextType = Infrastructure.Data.AppDbContext.AppDbContext;
 using Infrastructure.Data.Seed;
 using Scalar.AspNetCore;
+using Domain.Entities.Orders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,7 +44,14 @@ if (app.Environment.IsDevelopment())
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContextType>();
+
+    // hapus database lama
+    await db.Database.EnsureDeletedAsync();
+
+    // buat ulang database sesuai migrasi terbaru
     await db.Database.MigrateAsync();
+
+    // jalankan seeder
     await UserSeeder.SeedAsync(db);
     await CategorySeeder.SeedAsync(db);
     await ProductSeeder.SeedAsync(db);

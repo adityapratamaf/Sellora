@@ -37,6 +37,12 @@ namespace Infrastructure.Repositories.Payments
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
+        // public async Task<Payment?> GetByIdAsync(Guid id)
+        // {
+        //     return await _context.Set<Payment>()
+        //         .AsNoTracking()
+        //         .FirstOrDefaultAsync(x => x.Id == id);
+        // }
 
         public async Task<Payment> CreateAsync(Payment payment)
         {

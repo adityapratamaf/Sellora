@@ -87,5 +87,22 @@ namespace Infrastructure.Repositories.Products
                 .AsNoTracking()                              // Matikan change tracking: hasil query read-only, lebih ringan & cepat untuk kebutuhan baca
                 .Where(x => x.CategoryId == categoryId);     // Filter hanya produk yang CategoryId-nya sama dengan parameter categoryId
         }
+
+        public async Task<Product?> GetByIdForUpdateAsync(Guid id)
+        {
+            // Postgres: SELECT ... FOR UPDATE untuk row lock
+            // return await _context.Products
+            //     .FromSqlInterpolated($@"SELECT * FROM ""products"" WHERE ""Id"" = {id} FOR UPDATE")
+            //     .FirstOrDefaultAsync();
+            
+            return await _context.Products
+            .FromSqlRaw(@"
+                SELECT * FROM products
+                WHERE ""Id"" = {0}
+                FOR UPDATE
+            ", id)
+            .AsTracking()
+            .FirstOrDefaultAsync();
+        }
     }
 }

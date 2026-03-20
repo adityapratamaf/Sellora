@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class First : Migration
+    public partial class FirstMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -59,6 +59,23 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "stock_reservations",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    OrderId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ProductId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Quantity = table.Column<int>(type: "integer", nullable: false),
+                    ReservedUntil = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    IsReleased = table.Column<bool>(type: "boolean", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_stock_reservations", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "users",
                 columns: table => new
                 {
@@ -106,6 +123,30 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "orders",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    PaymentId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Status = table.Column<string>(type: "text", nullable: false),
+                    TotalAmount = table.Column<decimal>(type: "numeric", nullable: false),
+                    ExpiresAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_orders", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_orders_payments_PaymentId",
+                        column: x => x.PaymentId,
+                        principalTable: "payments",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "cart_items",
                 columns: table => new
                 {
@@ -134,6 +175,29 @@ namespace Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "order_items",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    OrderId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ProductId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ProductName = table.Column<string>(type: "text", nullable: false),
+                    UnitPrice = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
+                    Quantity = table.Column<int>(type: "integer", nullable: false),
+                    LineTotal = table.Column<decimal>(type: "numeric(18,2)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_order_items", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_order_items_orders_OrderId",
+                        column: x => x.OrderId,
+                        principalTable: "orders",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_cart_items_CartId_ProductId",
                 table: "cart_items",
@@ -151,9 +215,34 @@ namespace Infrastructure.Migrations
                 columns: new[] { "UserId", "IsActive" });
 
             migrationBuilder.CreateIndex(
+                name: "IX_order_items_OrderId",
+                table: "order_items",
+                column: "OrderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_orders_PaymentId",
+                table: "orders",
+                column: "PaymentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_orders_Status",
+                table: "orders",
+                column: "Status");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_orders_UserId",
+                table: "orders",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_products_category_id",
                 table: "products",
                 column: "category_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_stock_reservations_ProductId_ReservedUntil_IsReleased",
+                table: "stock_reservations",
+                columns: new[] { "ProductId", "ReservedUntil", "IsReleased" });
         }
 
         /// <inheritdoc />
@@ -163,7 +252,10 @@ namespace Infrastructure.Migrations
                 name: "cart_items");
 
             migrationBuilder.DropTable(
-                name: "payments");
+                name: "order_items");
+
+            migrationBuilder.DropTable(
+                name: "stock_reservations");
 
             migrationBuilder.DropTable(
                 name: "users");
@@ -175,7 +267,13 @@ namespace Infrastructure.Migrations
                 name: "products");
 
             migrationBuilder.DropTable(
+                name: "orders");
+
+            migrationBuilder.DropTable(
                 name: "categories");
+
+            migrationBuilder.DropTable(
+                name: "payments");
         }
     }
 }
