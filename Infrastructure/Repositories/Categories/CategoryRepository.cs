@@ -1,6 +1,6 @@
 using Domain.Entities.Categories;
 using Domain.Interfaces.Categories;
-using Infrastructure.Data.AppDbContext;
+using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 

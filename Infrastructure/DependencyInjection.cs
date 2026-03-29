@@ -1,7 +1,7 @@
-using Domain.Interfaces.Users;
+// using Domain.Interfaces.Users;
 using Domain.Interfaces.Products;
-using Infrastructure.Data.AppDbContext;
-using Infrastructure.Repositories.Users;
+using Infrastructure.Data;
+// using Infrastructure.Repositories.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +15,14 @@ using Infrastructure.Repositories.Carts;
 using Infrastructure.Repositories.Orders;
 using Domain.Interfaces.Orders;
 
+using Infrastructure.Identity;
+using Infrastructure.Services.Auth;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Application.Common.Models;
+using Application.Services.Auth;
+
 namespace Infrastructure;
 
 public static class DependencyInjection
@@ -24,7 +32,11 @@ public static class DependencyInjection
         services.AddDbContext<AppDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 
-        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddIdentity<ApplicationUser, IdentityRole<Guid>>()
+            .AddEntityFrameworkStores<AppDbContext>()
+            .AddDefaultTokenProviders();
+
+        // services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<ICategoryRepository, CategoryRepository>();
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<IPaymentRepository, PaymentRepository>();
@@ -33,7 +45,9 @@ public static class DependencyInjection
         services.AddScoped<IOrderRepository, OrderRepository>();
         services.AddScoped<IReservationRepository, ReservationRepository>();
         services.AddHostedService<ExpiredReservationCleanupService>();
+        services.AddScoped<IAuthService, AuthService>();
 
         return services;
     }
 }
+

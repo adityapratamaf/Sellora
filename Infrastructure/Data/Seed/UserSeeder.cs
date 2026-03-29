@@ -1,46 +1,38 @@
-using Domain.Entities.Users;
+using Infrastructure.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using AppDbContextType = Infrastructure.Data.AppDbContext.AppDbContext;
+using AppDbContextType = Infrastructure.Data.AppDbContext;
 
 namespace Infrastructure.Data.Seed;
 
 public static class UserSeeder
 {
-    public static async Task SeedAsync(AppDbContextType context)
+    public static async Task SeedAsync(
+        AppDbContextType context,
+        UserManager<ApplicationUser> userManager)
     {
         if (await context.Users.AnyAsync())
             return;
 
-        var now = DateTime.UtcNow;
-
-        context.Users.Add(new User
+        var admin = new ApplicationUser
         {
-            Name = "Admin",
-            Username = "admin",
+            UserName = "admin",
             Email = "admin@test.com",
-            Password = BCrypt.Net.BCrypt.HashPassword("admin"),
-            Address = "Jakarta",
-            Phone = "08976641818",
-            Role = "Admin",
-            IsActive = true,
-            CreatedAt = now,
-            UpdatedAt = now
-        });
-        
-        context.Users.Add(new User
-        {
-            Name = "Customer",
-            Username = "customer",
-            Email = "customer@test.com",
-            Password = BCrypt.Net.BCrypt.HashPassword("customer"),
-            Address = "Jakarta",
-            Phone = "08976641818",
-            Role = "Customer",
-            IsActive = true,
-            CreatedAt = now,
-            UpdatedAt = now
-        });
+            Name = "Administrator"
+        };
 
-        await context.SaveChangesAsync();
+        await userManager.CreateAsync(admin, "Admin123!");
+        await userManager.AddToRoleAsync(admin, "Admin");
+
+
+        var customer = new ApplicationUser
+        {
+            UserName = "customer",
+            Email = "customer@test.com",
+            Name = "Customer"
+        };
+
+        await userManager.CreateAsync(customer, "Customer123!");
+        await userManager.AddToRoleAsync(customer, "Customer");
     }
 }

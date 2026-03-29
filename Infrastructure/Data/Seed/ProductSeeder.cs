@@ -1,6 +1,6 @@
 using Domain.Entities.Products;
 using Microsoft.EntityFrameworkCore;
-using AppDbContextType = Infrastructure.Data.AppDbContext.AppDbContext;
+using AppDbContextType = Infrastructure.Data.AppDbContext;
 
 namespace Infrastructure.Data.Seed;
 

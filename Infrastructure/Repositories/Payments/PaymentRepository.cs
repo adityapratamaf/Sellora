@@ -1,6 +1,6 @@
 using Domain.Entities.Payments;
 using Domain.Interfaces.Payments;
-using Infrastructure.Data.AppDbContext;
+using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 

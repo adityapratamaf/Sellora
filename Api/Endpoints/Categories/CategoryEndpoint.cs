@@ -7,7 +7,7 @@ namespace Api.Endpoints.Categories
     {
         public static void MapCategoryEndpoints(this WebApplication app)
         {
-            var categoryGroup = app.MapGroup("/api/categories").WithTags("Categories");
+            var categoryGroup = app.MapGroup("/api/categories").WithTags("Categories").RequireAuthorization();
 
             // GET: /api/categories
             categoryGroup.MapGet("/", async (ICategoryService categoryService, int offset = 1, int limit = 10, string strQueryParam = "") =>
@@ -17,7 +17,7 @@ namespace Api.Endpoints.Categories
             });
 
             // GET: /api/categories/{id}
-            categoryGroup.MapGet("/{strUUID}", async (ICategoryService categoryService, Guid id) =>
+            categoryGroup.MapGet("/{id:guid}", async (ICategoryService categoryService, Guid id) =>
             {
                 var result = await categoryService.GetItemDetailById(id);
                 return Results.Ok(result);

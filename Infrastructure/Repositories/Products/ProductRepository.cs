@@ -1,6 +1,6 @@
 using Domain.Entities.Products;
 using Domain.Interfaces.Products;
-using Infrastructure.Data.AppDbContext;
+using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 

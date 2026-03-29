@@ -1,6 +1,6 @@
 using Domain.Entities.Orders;
 using Domain.Interfaces.Orders;
-using Infrastructure.Data.AppDbContext;
+using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories.Orders;

@@ -2,7 +2,6 @@ using Domain.Entities.Carts;
 using Domain.Interfaces.Carts;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using Infrastructure.Data.AppDbContext;
 using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Repositories.Carts;
