@@ -22,6 +22,7 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new() { Title = "Sellora", Version = "1.0" });
 
+    // Ini opsional. Kalau full cookie auth, Swagger bearer tidak wajib lagi.
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -43,7 +44,7 @@ builder.Services.AddSwaggerGen(c =>
                     Id = "Bearer"
                 }
             },
-            new string[] {}
+            Array.Empty<string>()
         }
     });
 });
@@ -54,7 +55,6 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.Configure<JwtSettings>(
     builder.Configuration.GetSection("JwtSettings"));
 
-// builder.Services.AddAuthentication();
 var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>();
 
 builder.Services.AddAuthentication(options =>
@@ -76,7 +76,23 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(jwtSettings.Key))
     };
+
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            var token = context.Request.Cookies["access_token"];
+
+            if (!string.IsNullOrEmpty(token))
+            {
+                context.Token = token;
+            }
+
+            return Task.CompletedTask;
+        }
+    };
 });
+
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
@@ -86,7 +102,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 
-        app.MapScalarApiReference(options =>
+    app.MapScalarApiReference(options =>
     {
         options
             .WithTitle("Sellora API Docs")
@@ -96,7 +112,6 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-// Apply Migration (Seeding done by HasData)
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -118,7 +133,6 @@ using (var scope = app.Services.CreateScope())
 
 app.UseStaticFiles();
 
-// app.UseHttpsRedirection();
 if (!app.Environment.IsProduction())
 {
     app.UseHttpsRedirection();

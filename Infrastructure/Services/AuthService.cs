@@ -41,7 +41,8 @@ public class AuthService : IAuthService
         {
             Token = token,
             Email = user.Email!,
-            Role = role
+            Role = role,
+            Name = user.Name
         };
     }
 
