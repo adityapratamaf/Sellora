@@ -7,7 +7,7 @@ namespace Api.Endpoints.Payments
     {
         public static void MapPaymentEndpoints(this WebApplication app)
         {
-            var paymentGroup = app.MapGroup("/api/payments").WithTags("Payments");
+            var paymentGroup = app.MapGroup("/api/payments").WithTags("Payments").RequireAuthorization();
 
             // GET: /api/payments
             paymentGroup.MapGet("/", async (IPaymentService paymentService, int offset = 1, int limit = 10, string strQueryParam = "") =>

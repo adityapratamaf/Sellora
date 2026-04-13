@@ -45,12 +45,16 @@ public class AuthService : IAuthService
         };
     }
 
-    public Task<bool> LogoutAsync() => Task.FromResult(true);
+    public Task LogoutAsync()
+    {
+        return Task.CompletedTask;
+    }
 
     private string GenerateToken(ApplicationUser user, string role)
     {
         var claims = new[]
         {
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new Claim(ClaimTypes.Email, user.Email!),
             new Claim(ClaimTypes.Role, role)

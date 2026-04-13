@@ -18,16 +18,6 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
-// builder.Services.AddSwaggerGen();
-// builder.Services.AddSwaggerGen(c =>
-// {
-//     c.SwaggerDoc("v1", new() 
-//     { 
-//         Title = "Sellora", 
-//         Version = "1.0" 
-//     });
-// });
-
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new() { Title = "Sellora", Version = "1.0" });
@@ -39,7 +29,7 @@ builder.Services.AddSwaggerGen(c =>
         Scheme = "bearer",
         BearerFormat = "JWT",
         In = ParameterLocation.Header,
-        Description = "Masukkan token JWT (tanpa kata 'Bearer ')"
+        Description = "Input Token JWT (Without 'Bearer ')"
     });
 
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
