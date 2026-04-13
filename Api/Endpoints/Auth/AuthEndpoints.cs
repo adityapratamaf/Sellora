@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Application.Services.Auth;
 using Microsoft.AspNetCore.Http;
 using Shared.DTO.Auth;
@@ -8,33 +9,46 @@ public static class AuthEndpoints
 {
     public static void MapAuthEndpoints(this IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("/api/auth");
+        var group = app.MapGroup("/api/auth").WithTags("Auth");
 
         group.MapPost("/login", async (HttpContext httpContext, IAuthService service, LoginRequest request) =>
         {
-            var result = await service.LoginAsync(request);
-
-            if (result == null)
-                return Results.Unauthorized();
-
-            var cookieOptions = new CookieOptions
+            try
             {
-                HttpOnly = true,
-                Secure = false, // todo : localhost development
-                SameSite = SameSiteMode.Lax,
-                Expires = DateTimeOffset.UtcNow.AddMinutes(60)
-            };
+                var result = await service.LoginAsync(request);
 
-            httpContext.Response.Cookies.Append("access_token", result.Token, cookieOptions);
+                var cookieOptions = new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = false, // todo : localhost development
+                    SameSite = SameSiteMode.Lax,
+                    Expires = DateTimeOffset.UtcNow.AddMinutes(60)
+                };
+            
+                if (string.IsNullOrEmpty(result?.Token))
+                    return Results.BadRequest(new
+                    {
+                        message = "Token Not Valid"
+                    });
 
-            return Results.Ok(new
+                httpContext.Response.Cookies.Append("access_token", result.Token, cookieOptions);
+
+                return Results.Ok(new
+                {
+                    message = "Login Success",
+                    name = result.Name,
+                    email = result.Email,
+                    role = result.Role,
+                    Token = result.Token
+                });
+            }
+            catch (Exception ex)
             {
-                message = "Login Success",
-                name = result.Name,
-                email = result.Email,
-                role = result.Role,
-                Token = result.Token
-            });
+                return Results.BadRequest(new
+                {
+                    message = ex.Message
+                });
+            }
         });
 
         group.MapPost("/logout", (HttpContext httpContext) =>
@@ -44,6 +58,27 @@ public static class AuthEndpoints
             return Results.Ok(new
             {
                 message = "Logout Success"
+            });
+        })
+        .RequireAuthorization();
+
+        group.MapGet("/me", (ClaimsPrincipal user) =>
+        {
+            var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+                return Results.Unauthorized();
+
+            var name = user.FindFirst(ClaimTypes.Name)?.Value;
+            var email = user.FindFirst(ClaimTypes.Email)?.Value;
+            var role = user.FindFirst(ClaimTypes.Role)?.Value;
+
+            return Results.Ok(new
+            {
+                id = userId,
+                name,
+                email,
+                role
             });
         })
         .RequireAuthorization();

@@ -24,13 +24,24 @@ public class AuthService : IAuthService
 
     public async Task<LoginResponse?> LoginAsync(LoginRequest request)
     {
+        if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
+        {
+            throw new Exception("Email & Password Required");
+        }
+
         var user = await _userManager.FindByEmailAsync(request.Email);
 
-        if (user == null) return null;
+        if (user == null)
+        {
+            throw new Exception("Email Not Registered");
+        }
 
         var valid = await _userManager.CheckPasswordAsync(user, request.Password);
 
-        if (!valid) return null;
+        if (!valid)
+        {
+            throw new Exception("Wrong Password");
+        }
 
         var roles = await _userManager.GetRolesAsync(user);
         var role = roles.FirstOrDefault() ?? "User";
@@ -57,7 +68,10 @@ public class AuthService : IAuthService
         {
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new Claim(ClaimTypes.Email, user.Email!),
+            // new Claim(ClaimTypes.Name, user.Name ?? ""),
+            new Claim(ClaimTypes.Name, user.Name ?? string.Empty),
+            // new Claim(ClaimTypes.Email, user.Email!),
+            new Claim(ClaimTypes.Email, user.Email ?? string.Empty),
             new Claim(ClaimTypes.Role, role)
         };
 
