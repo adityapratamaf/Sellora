@@ -11,6 +11,25 @@ public static class AuthEndpoints
     {
         var group = app.MapGroup("/api/auth").WithTags("Auth");
 
+        group.MapPost("/register", async (IAuthService service, RegisterRequest request) =>
+        {
+            try
+            {
+                var message = await service.RegisterAsync(request);
+                return Results.Ok(new
+                {
+                    message
+                });
+            }
+            catch (Exception ex)
+            {
+                return Results.BadRequest(new
+                {
+                    message = ex.Message
+                });
+            }
+        });
+
         group.MapPost("/login", async (HttpContext httpContext, IAuthService service, LoginRequest request) =>
         {
             try

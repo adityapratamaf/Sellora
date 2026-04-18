@@ -15,12 +15,15 @@ public class AuthService : IAuthService
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly JwtSettings _jwt;
+    private readonly RoleManager<IdentityRole<Guid>> _roleManager;
 
-    public AuthService(UserManager<ApplicationUser> userManager, IOptions<JwtSettings> jwt)
+    public AuthService(UserManager<ApplicationUser> userManager, IOptions<JwtSettings> jwt, RoleManager<IdentityRole<Guid>> roleManager)
     {
         _userManager = userManager;
         _jwt = jwt.Value;
+        _roleManager = roleManager;
     }
+
 
     public async Task<LoginResponse?> LoginAsync(LoginRequest request)
     {
@@ -60,6 +63,49 @@ public class AuthService : IAuthService
     public Task LogoutAsync()
     {
         return Task.CompletedTask;
+    }
+
+    public async Task<string> RegisterAsync(RegisterRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(request.Name) ||
+            string.IsNullOrWhiteSpace(request.Email) ||
+            string.IsNullOrWhiteSpace(request.Password))
+        {
+            throw new Exception("Name, Email, and Password are required");
+        }
+
+        var existingUser = await _userManager.FindByEmailAsync(request.Email);
+
+        if (existingUser != null)
+        {
+            throw new Exception("Email already registered");
+        }
+
+        var user = new ApplicationUser
+        {
+            UserName = request.Email,
+            Email = request.Email,
+            Name = request.Name
+        };
+
+        var result = await _userManager.CreateAsync(user, request.Password);
+
+        if (!result.Succeeded)
+        {
+            var errors = string.Join(", ", result.Errors.Select(x => x.Description));
+            throw new Exception(errors);
+        }
+
+        var role = "User";
+
+        if (!await _roleManager.RoleExistsAsync(role))
+        {
+            await _roleManager.CreateAsync(new IdentityRole<Guid> { Name = role });
+        }
+
+        await _userManager.AddToRoleAsync(user, role);
+
+        return "Register Success";
     }
 
     private string GenerateToken(ApplicationUser user, string role)
