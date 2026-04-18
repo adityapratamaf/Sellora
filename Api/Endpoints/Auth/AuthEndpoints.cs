@@ -2,6 +2,8 @@ using System.Security.Claims;
 using Application.Services.Auth;
 using Microsoft.AspNetCore.Http;
 using Shared.DTO.Auth;
+using Application.Common.Models;
+using Microsoft.Extensions.Options;
 
 namespace Api.Endpoints.Auth;
 
@@ -30,18 +32,20 @@ public static class AuthEndpoints
             }
         });
 
-        group.MapPost("/login", async (HttpContext httpContext, IAuthService service, LoginRequest request) =>
+        group.MapPost("/login", async (HttpContext httpContext, IAuthService service,IOptions<JwtSettings> jwtOptions, LoginRequest request) =>
         {
             try
             {
                 var result = await service.LoginAsync(request);
+
+                var jwtSettings = jwtOptions.Value;
 
                 var cookieOptions = new CookieOptions
                 {
                     HttpOnly = true,
                     Secure = false, // todo : localhost development
                     SameSite = SameSiteMode.Lax,
-                    Expires = DateTimeOffset.UtcNow.AddMinutes(60)
+                    Expires = DateTimeOffset.UtcNow.AddMinutes(jwtSettings.ExpiredTime)
                 };
             
                 if (string.IsNullOrEmpty(result?.Token))
@@ -49,7 +53,7 @@ public static class AuthEndpoints
                     {
                         message = "Token Not Valid"
                     });
-
+                
                 httpContext.Response.Cookies.Append("access_token", result.Token, cookieOptions);
 
                 return Results.Ok(new

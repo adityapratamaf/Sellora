@@ -24,7 +24,6 @@ public class AuthService : IAuthService
         _roleManager = roleManager;
     }
 
-
     public async Task<LoginResponse?> LoginAsync(LoginRequest request)
     {
         if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
@@ -114,9 +113,7 @@ public class AuthService : IAuthService
         {
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            // new Claim(ClaimTypes.Name, user.Name ?? ""),
             new Claim(ClaimTypes.Name, user.Name ?? string.Empty),
-            // new Claim(ClaimTypes.Email, user.Email!),
             new Claim(ClaimTypes.Email, user.Email ?? string.Empty),
             new Claim(ClaimTypes.Role, role)
         };
@@ -128,7 +125,7 @@ public class AuthService : IAuthService
             issuer: _jwt.Issuer,
             audience: _jwt.Audience,
             claims: claims,
-            expires: DateTime.UtcNow.AddMinutes(_jwt.DurationInMinutes),
+            expires: DateTime.UtcNow.AddMinutes(_jwt.ExpiredTime),
             signingCredentials: creds
         );
 
